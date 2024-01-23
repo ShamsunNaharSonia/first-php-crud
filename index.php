@@ -24,12 +24,15 @@
        <div class="container-fluid">
         <div class="container">
 
-            <form class="insert-form"  method="POST" action="#">
-               <div class="row" >
+            <form class="insert-form"  method="POST" action="#" enctype="multipart/form-data">
+               <div class="form" >
                     <div class="form-group col-lg-4">
 
-    
-                    
+                        <div class="input_field">
+                            <label for="">Photo</label><br>
+                            <input type="file" name="fileToUpload" style="width:100%;"><br><br>
+                        </div>
+                
 
                         <label for="">Student Name</label>
                         <input type="text"  id="name" class="form-control" name="sname" autocomplete="off" required><br>
@@ -85,6 +88,12 @@
 
 if(isset($_POST['submit']))
 {
+    $filename= $_FILES["fileToUpload"]["name"];
+    $tempname= $_FILES["fileToUpload"]["tmp_name"];
+    $folder="s-images/".$filename;
+    //echo $folder;
+    move_uploaded_file($tempname,$folder);
+    //echo "<img src='$folder' height='100px' width='100px'>";
    
     $studentName =$_POST['sname'];
     $studentCity = $_POST['city'];
@@ -95,7 +104,7 @@ if(isset($_POST['submit']))
 
 
 
-   $query= "INSERT INTO student_details (`name`, `city`, `age`, `gpa`, `gender`) values('$studentName',' $studentCity','$studentAge','$studentGpa','$studentGender')";
+   $query= "INSERT INTO student_details (`student_image`,`name`, `city`, `age`, `gpa`, `gender`) values('$folder','$studentName',' $studentCity','$studentAge','$studentGpa','$studentGender')";
    $query_pass= mysqli_query($con,  $query);
    if( $query_pass){
     echo "<script>alert('DATA INSERT SUCCESSFULLY')</script>";
@@ -110,5 +119,11 @@ if(isset($_POST['submit']))
     echo "<script>alert('DATA INSERTION FAILED')</script>";
    }
 }
+
+?>
+<!-- image upload -->
+<?php
+
+
 
 ?>

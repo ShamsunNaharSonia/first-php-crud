@@ -11,7 +11,7 @@
 <?php 
 require("connection.php");
 
-$sql = "SELECT student_id, name, city, age,gpa,gender FROM student_details";
+$sql = "SELECT  student_id,student_image, name, city, age,gpa,gender FROM student_details";
 
 $data = mysqli_query($con, $sql);
 if(mysqli_num_rows($data) > 0)
@@ -22,6 +22,7 @@ if(mysqli_num_rows($data) > 0)
    <center><table class="tbl" cellspacing="7" width="" > 
    <tr> 
    <th width="7%"> ID </th>
+   <th width="7%">PHOTO</th>
     <th width="22%"> NAME </th> 
     <th width="20%"> CITY </th>
     <th width="5%"> AGE </th> 
@@ -32,6 +33,7 @@ if(mysqli_num_rows($data) > 0)
    while($row = mysqli_fetch_assoc($data)){
  
        echo '  <tbody><tr> <td>' . $row["student_id"] . '</td>
+       <td><img src="'. $row["student_image"] . '" height="100px" width="100px"</td>
        <td>' . $row["name"] . '</td>
        <td> ' . $row["city"] . '</td>
        <td>' . $row["age"] . '</td> 
