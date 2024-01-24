@@ -1,4 +1,5 @@
 <?php include("connection.php");
+require("navbar.php");
 $id= $_GET['student_id'];
 $sql = "SELECT * FROM student_details where student_id='$id'";
 
@@ -37,11 +38,33 @@ $reslt['city'] = trim($reslt['city']);
        <div class="container-fluid">
         <div class="container">
 
-            <form class="up-form" method="POST" action="#">
+            <form class="up-form" method="POST" action="#" enctype="multipart/form-data">
                <div class="row" >
                     <div class="form-group col-lg-4">
 
-    
+
+
+
+
+                   <!-- photo -->
+                   <div class="form-group">
+							<!-- <h3>Current Photo</h3> -->
+							<img src="<?php echo $reslt['student_image']?>" height="120" width="150" />
+							<input type="hidden" name="previous" value="<?php echo $reslt['student_image']?>"/>
+							<!-- <h3>New Photo</h3> -->
+							<input type="file" class="form-control" name="fileToUpload" value="<?php echo $reslt['student_image']?>"/>
+						</div>
+
+
+ <!-- <td><img src="'. $row["student_image"] . '" height="100px" width="100px"</td> -->
+
+
+
+<!-- 
+                    <div class="input_field">
+                            <label for="">Photo</label><br>
+                            <input type="file" name="fileToUpload" style="width:100%;"><br><br>
+                        </div> -->
                     
 
                         <label for="">Student Name</label>
@@ -106,37 +129,87 @@ $reslt['city'] = trim($reslt['city']);
 </body>
 </html>
 
-<?php
-if(isset($_POST['update']))
+
+<!-- ata php er modde hobe
+    if(isset($_POST['update']))
 {
-   
     $studentName =$_POST['sname'];
+    $previous = $_POST['previous'];
+    $filename= $_FILES["fileToUpload"]["name"];
+    $tempname= $_FILES["fileToUpload"]["tmp_name"];
+    $folder="s-images/".$filename;
+    //echo $folder;
     $studentCity = $_POST['city'];
     $studentAge =$_POST['sage'];
     $studentGpa = $_POST['sgpa'];
     $studentGender = $_POST['gender'];
+    if(move_uploaded_file($tempname,$folder)){
+        $query= "UPDATE student_details set student_image='$folder',name='$studentName',city='$studentCity',age='$studentAge',gpa='$studentGpa',gender='$studentGender'where student_id='$id'";
+        $query_pass= mysqli_query($con,  $query);
+        if( $query_pass)
+        {
+            echo "<script>alert('DATA UPDATED SUCCESSFULLY')</script>";
+            ?>
 
+             <meta http-equiv = "refresh" content = "0; url =http://localhost/php-crud/display_data.php" />
 
-//if( $studentName !="" &&  $studentCity !="" && $studentAge!="" &&   $studentGpa !="" &&  $studentGender!="")
-//{
+            
+        }
+        
+        else
+        {
+            echo "<script>alert('DATA UPDATED FAILED')</script>";
+        }
+    }
+    //try upload exist image
    
+   
+} -->
 
+<?php
+if(isset($_POST['update']))
+{
+    $studentName = $_POST['sname'];
+    $studentCity = $_POST['city'];
+    $studentAge = $_POST['sage'];
+    $studentGpa = $_POST['sgpa'];
+    $studentGender = $_POST['gender'];
 
-$query= "UPDATE student_details set name='$studentName',city='$studentCity',age='$studentAge',gpa='$studentGpa',gender='$studentGender'where student_id='$id'";
-   $query_pass= mysqli_query($con,  $query);
-   if( $query_pass){
-    echo "<script>alert('DATA UPDATED SUCCESSFULLY')</script>";
-    ?>
-     <meta http-equiv = "refresh" content = "0; url =http://localhost/php-crud/display_data.php" />
-    <?php
-   }
-   else{
-    echo "<script>alert('DATA UPDATED FAILED')</script>";
-   }
+    // Check if a new image is uploaded..akhane && theke baki code check kortese j file upload a error jodi 0 hoi
+    // if(isset($_FILES["fileToUpload"]) && $_FILES["fileToUpload"]["error"] == 0) {
+        if(isset($_FILES["fileToUpload"])){
+        // Delete the old image
+        $previousImage = $_POST['previous'];
+        if (file_exists($previousImage) && is_file($previousImage)) {
+            unlink($previousImage);
+        }
+
+        // Upload the new image
+        $filename = $_FILES["fileToUpload"]["name"];
+        $tempname = $_FILES["fileToUpload"]["tmp_name"];
+        $folder = "s-images/" . $filename;
+
+        if(move_uploaded_file($tempname, $folder)) {
+            // Update the database with the new image path and other fields
+            $query = "UPDATE student_details SET student_image='$folder', name='$studentName', city='$studentCity', age='$studentAge', gpa='$studentGpa', gender='$studentGender' WHERE student_id='$id'";
+        } else {
+            echo "<script>alert('Failed to move the uploaded image. Data not updated.')</script>";
+        }
+    } else {
+        // No new image uploaded, update only other fields
+        $query = "UPDATE student_details SET name='$studentName', city='$studentCity', age='$studentAge', gpa='$studentGpa', gender='$studentGender' WHERE student_id='$id'";
+    }
+
+    // Execute the query
+    $query_pass = mysqli_query($con, $query);
+
+    if($query_pass) {
+        echo "<script>alert('DATA UPDATED SUCCESSFULLY')</script>";
+        ?>
+        <meta http-equiv="refresh" content="0; url=http://localhost/php-crud/display_data.php" />
+        <?php
+    } else {
+        echo "<script>alert('DATA UPDATED FAILED')</script>";
+    }
 }
-// else{
-//     echo "please fill all fields";
-// }
-   
-//}
 ?>

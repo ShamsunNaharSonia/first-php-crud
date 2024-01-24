@@ -1,4 +1,6 @@
-<?php include("connection.php")?>
+<?php include("connection.php");
+include("navbar.php");
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

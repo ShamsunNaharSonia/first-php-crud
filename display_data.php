@@ -10,7 +10,7 @@
 
 <?php 
 require("connection.php");
-
+require("navbar.php");
 $sql = "SELECT  student_id,student_image, name, city, age,gpa,gender FROM student_details";
 
 $data = mysqli_query($con, $sql);
